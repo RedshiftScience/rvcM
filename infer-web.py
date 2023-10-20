@@ -1326,42 +1326,55 @@ def cli_infer(com):
     # get VC first
     com = cli_split_command(com)
     model_name = com[0]
+    print(model_name)
     source_audio_path = com[1]
+    print(source_audio_path)
     output_file_name = com[2]
+    print(output_file_name)
     feature_index_path = com[3]
+    print(feature_index_path)
     f0_file = None # Not Implemented Yet
 
     # Get parameters for inference
     speaker_id = int(com[4])
+    print(speaker_id)
     transposition = float(com[5])
+    print(transposition)
     f0_method = com[6]
     crepe_hop_length = int(com[7])
+    print(crepe_hop_length)
     harvest_median_filter = int(com[8])
+    print(harvest_median_filter)
     resample = int(com[9])
+    print(resample)
     mix = float(com[10])
+    print(mix)
     feature_ratio = float(com[11])
+    print(feature_ratio)
     protection_amnt = float(com[12])
-
+    print(protection_amnt)
     print("Mangio-RVC-Fork Infer-CLI: Starting the inference...")
-    vc_data = get_vc(model_name)
+    vc_data = get_vc(model_name, False, False)
     print(vc_data)
     print("Mangio-RVC-Fork Infer-CLI: Performing inference...")
+    # for transpose_num in range(-12,0):
     conversion_data = vc_single(
-        speaker_id,
-        source_audio_path,
-        transposition,
-        f0_file,
-        f0_method,
-        feature_index_path,
-        feature_index_path,
-        feature_ratio,
-        harvest_median_filter,
-        resample,
-        mix,
-        protection_amnt,
-        crepe_hop_length,        
-    )
+            speaker_id,
+            source_audio_path,
+            transposition,
+            f0_file,
+            f0_method,
+            feature_index_path,
+            feature_index_path,
+            feature_ratio,
+            harvest_median_filter,
+            resample,
+            mix,
+            protection_amnt,
+            crepe_hop_length,        
+        )
     if "Success." in conversion_data[0]:
+        # output_file_name = f"out_ashera_multi_{transpose_num}.wav"
         print("Mangio-RVC-Fork Infer-CLI: Inference succeeded. Writing to %s/%s..." % ('audio-outputs', output_file_name))
         wavfile.write('%s/%s' % ('audio-outputs', output_file_name), conversion_data[1][0], conversion_data[1][1])
         print("Mangio-RVC-Fork Infer-CLI: Finished! Saved output to %s/%s" % ('audio-outputs', output_file_name))

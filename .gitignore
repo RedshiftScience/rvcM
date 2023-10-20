@@ -4,3 +4,7 @@ __pycache__
 *.pyd
 hubert_base.pt
 /logs
+/audio-outputs
+rusty*
+ashera*
+/.venv

@@ -30,6 +30,7 @@ class Config:
             self.noautoopen,
             self.paperspace,
             self.is_cli,
+            self.model_name,
         ) = self.arg_parse()
         
         self.x_pad, self.x_query, self.x_center, self.x_max = self.device_config()
@@ -56,6 +57,10 @@ class Config:
         parser.add_argument( # Fork Feature. Embed a CLI into the infer-web.py
             "--is_cli", action="store_true", help="Use the CLI instead of setting up a gradio UI. This flag will launch an RVC text interface where you can execute functions from infer-web.py!"
         )
+        # model name
+        parser.add_argument(
+            "--model_name", type=str, default="ashera.pth", help="Model name"
+        )
         cmd_opts = parser.parse_args()
 
         cmd_opts.port = cmd_opts.port if 0 <= cmd_opts.port <= 65535 else 7865
@@ -68,6 +73,7 @@ class Config:
             cmd_opts.noautoopen,
             cmd_opts.paperspace,
             cmd_opts.is_cli,
+            cmd_opts.model_name,
         )
 
     def device_config(self) -> tuple:
@@ -111,6 +117,8 @@ class Config:
 
         if self.n_cpu == 0:
             self.n_cpu = cpu_count()
+
+        print(f"using {self.device} device at {self.n_cpu} threads {self.gpu_name}, {self.gpu_mem}G, half={self.is_half}")
 
         if self.is_half:
             # 6G显存配置
